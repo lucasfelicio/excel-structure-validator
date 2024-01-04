@@ -1,7 +1,9 @@
 """Módulo de validação de colunas presentes."""
 
 from typing import Tuple
+
 from pandas import DataFrame
+
 
 def validar_se_todas_as_colunas_estao_presentes(
     excel_modelo: DataFrame, arquivo: DataFrame

@@ -1,6 +1,7 @@
-from .quantidade_linhas import validar_quantidade_linhas
 from .colunas_a_mais import validar_se_existem_colunas_a_mais
 from .colunas_a_menos import validar_se_existem_colunas_a_menos
-from .colunas_na_ordem import validar_se_todas_as_colunas_estao_presentes_na_mesma_ordem
-from .tipos_dados import validar_tipos_dados
+from .colunas_na_ordem import \
+    validar_se_todas_as_colunas_estao_presentes_na_mesma_ordem
 from .colunas_presentes import validar_se_todas_as_colunas_estao_presentes
+from .quantidade_linhas import validar_quantidade_linhas
+from .tipos_dados import validar_tipos_dados

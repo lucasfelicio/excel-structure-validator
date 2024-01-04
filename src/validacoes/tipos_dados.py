@@ -1,7 +1,9 @@
 """Módulo de validação de tipos de dados."""
 
 from typing import Tuple
+
 from pandas import DataFrame
+
 
 def validar_tipos_dados(excel_modelo: DataFrame, arquivo: DataFrame) -> Tuple[bool, str]:
     """Função para verificar se o arquivo recebido tem os mesmos tipos de dados

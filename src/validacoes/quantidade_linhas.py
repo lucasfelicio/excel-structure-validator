@@ -1,7 +1,9 @@
 """Módulo de validação de quantidade de linhas."""
 
 from typing import Tuple
+
 from pandas import DataFrame
+
 
 def validar_quantidade_linhas(excel_modelo: DataFrame, arquivo: DataFrame) -> Tuple[bool, str]:
     """Função para verificar se o arquivo recebido tem o mesmo número
