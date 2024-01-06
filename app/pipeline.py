@@ -6,9 +6,9 @@ import time
 import pandas as pd
 from loguru import logger
 
-from src.utility.config import (INPUT_DIR, MODEL_DIR, OUTPUT_CORRETOS,
+from .config import (INPUT_DIR, MODEL_DIR, OUTPUT_CORRETOS,
                                 OUTPUT_REVISAO)
-from src.validacoes import (
+from .validacoes import (
     validar_quantidade_linhas, validar_se_existem_colunas_a_mais,
     validar_se_existem_colunas_a_menos,
     validar_se_todas_as_colunas_estao_presentes,
@@ -26,12 +26,12 @@ for filename in os.listdir(INPUT_DIR):
 files_names.sort()
 
 arquivos_recebidos = [
-    (filename, pd.read_excel(os.path.join(INPUT_DIR,filename)))
+    (filename, pd.read_excel(os.path.join(INPUT_DIR, filename)))
     for filename in files_names
 ]
 
 valicaoes = [
-    validar_quantidade_linhas, validar_se_existem_colunas_a_mais,
+    validar_se_existem_colunas_a_mais,
     validar_se_existem_colunas_a_menos,
     validar_se_todas_as_colunas_estao_presentes,
     validar_se_todas_as_colunas_estao_presentes_na_mesma_ordem,
@@ -39,11 +39,37 @@ valicaoes = [
 ]
 
 for i, (filename, arquivo) in enumerate(arquivos_recebidos, start=1):
+    
     log_file_name = f'auditoria:{filename[:-5]}-data:{time.strftime("%Y-%m-%d")}.log'
 
     logger.remove()
     logger.add(
         log_file_name, 
         level='INFO',
-        format='{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}'
+        format='{time:YYYY-MM-DDTHH} | {level} | {message}'
     )
+
+    logger.info(f'Iniciando o proceso de validação {filename}.')
+    
+    resultados = []
+    testes_falhos = []
+
+    for idx, validacao in enumerate(valicaoes, start=1):
+        
+        resultado, msg = validacao(excel_modelo, arquivo)
+        
+        if resultado:
+            logger.info(f'Arquivo {filename} - Teste {idx}.{validacao.__name__}: {msg}')
+        else:
+            logger.error(f'Arquivo {filename} - Teste {idx}.{validacao.__name__}: {msg}')
+            testes_falhos.append(idx)
+        
+        resultados.append(resultado)
+
+    if all(resultados):
+        logger.info(f'Todos os testes passaram.')
+        shutil.move(filename, OUTPUT_CORRETOS)
+    else:
+        logger.critical(f'Um ou mais testes não passaram.')
+        shutil.move(filename, OUTPUT_REVISAO)
+
