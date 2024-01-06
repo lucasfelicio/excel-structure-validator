@@ -22,3 +22,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.taskipy.tasks]
 formt = "isort ."
+run = "python3 src/pipeline.py"
