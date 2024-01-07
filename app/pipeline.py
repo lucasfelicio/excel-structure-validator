@@ -65,11 +65,27 @@ for i, (filename, arquivo) in enumerate(arquivos_recebidos, start=1):
             testes_falhos.append(idx)
         
         resultados.append(resultado)
+    
+    origem_excel = os.path.join(INPUT_DIR, filename)
+    origem_log = (
+        log_file_name
+    )
 
     if all(resultados):
+        
         logger.info(f'Todos os testes passaram.')
-        shutil.move(filename, OUTPUT_CORRETOS)
-    else:
-        logger.critical(f'Um ou mais testes não passaram.')
-        shutil.move(filename, OUTPUT_REVISAO)
+        
+        destino_excel = os.path.join(OUTPUT_CORRETOS, filename)
+        destino_log = os.path.join(OUTPUT_CORRETOS, log_file_name)
 
+        shutil.move(origem_excel, destino_excel)
+        shutil.move(origem_log, destino_log)
+    else:
+        testes_falhos_str = ', '.join(map(str, testes_falhos))
+        logger.critical(f'Arquivo {filename} - Teste(s) {testes_falhos_str} falhou(ram).')
+        
+        destino_excel = os.path.join(OUTPUT_REVISAO, filename)
+        destino_log = os.path.join(OUTPUT_REVISAO, log_file_name)
+
+        shutil.move(origem_excel, destino_excel)
+        shutil.move(origem_log, destino_log)
